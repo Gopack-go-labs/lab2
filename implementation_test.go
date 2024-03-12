@@ -49,7 +49,7 @@ func TestPostfixToInfix(t *testing.T) {
 }
 
 func ExamplePostfixToInfix() {
-	res, _ := PostfixToInfix("+ 2 2")
+	res, _ := PostfixToInfix("2 2 +")
 	fmt.Println(res)
 
 	// Output:
