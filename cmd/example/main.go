@@ -4,6 +4,7 @@ import (
 	"flag"
 	"io"
 	"os"
+	"strings"
 
 	"github.com/Gopack-go-labs/lab2"
 )
@@ -20,13 +21,20 @@ func main() {
 	var input io.Reader
 	var output io.Writer
 
-	// TODO: Change this to accept input from the command line arguments as described in the task and
-	//       output the results using the ComputeHandler instance.
-	//       handler := &lab2.ComputeHandler{
-	//           Input: {construct io.Reader according the command line parameters},
-	//           Output: {construct io.Writer according the command line parameters},
-	//       }
-	//       err := handler.Compute()
+	if *fileFlag != "" {
+		file, err := os.Open(*fileFlag)
+		if err != nil {
+			os.Stderr.WriteString("Error opening file\n")
+			os.Exit(1)
+		}
+		defer file.Close()
+		input = file
+	} else if *expressionFlag != "" {
+		input = strings.NewReader(*expressionFlag)
+	} else {
+		os.Stderr.WriteString("No expression or file provided\n")
+		os.Exit(1)
+	}
 
 	handler := lab2.NewComputeHandler(input, output)
 	err := handler.Compute()
