@@ -36,6 +36,18 @@ func main() {
 		os.Exit(1)
 	}
 
+	if *outputFlag != "" {
+		file, err := os.Create(*outputFlag)
+		if err != nil {
+			os.Stderr.WriteString("Error creating output file\n")
+			os.Exit(1)
+		}
+		defer file.Close()
+		output = file
+	} else {
+		output = os.Stdout
+	}
+
 	handler := lab2.NewComputeHandler(input, output)
 	err := handler.Compute()
 	if err != nil {
