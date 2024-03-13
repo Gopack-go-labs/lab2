@@ -2,7 +2,8 @@ package main
 
 import (
 	"flag"
-	"fmt"
+	"io"
+	"os"
 
 	"github.com/Gopack-go-labs/lab2"
 )
@@ -16,6 +17,9 @@ var (
 func main() {
 	flag.Parse()
 
+	var input io.Reader
+	var output io.Writer
+
 	// TODO: Change this to accept input from the command line arguments as described in the task and
 	//       output the results using the ComputeHandler instance.
 	//       handler := &lab2.ComputeHandler{
@@ -24,6 +28,10 @@ func main() {
 	//       }
 	//       err := handler.Compute()
 
-	res, _ := lab2.PostfixToInfix("+ 2 2")
-	fmt.Println(res)
+	handler := lab2.NewComputeHandler(input, output)
+	err := handler.Compute()
+	if err != nil {
+		os.Stderr.WriteString(err.Error())
+		os.Exit(1)
+	}
 }
