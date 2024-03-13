@@ -3,12 +3,14 @@ package main
 import (
 	"flag"
 	"fmt"
+
 	"github.com/Gopack-go-labs/lab2"
 )
 
 var (
-	inputExpression = flag.String("e", "", "Expression to compute")
-	// TODO: Add other flags support for input and output configuration.
+	expressionFlag = flag.String("e", "", "Postfix expression")
+	fileFlag       = flag.String("f", "", "File containing postfix expression")
+	outputFlag     = flag.String("o", "", "Output file")
 )
 
 func main() {
