@@ -15,7 +15,7 @@ var operators = map[string]int{
 }
 
 func PostfixToInfix(input string) (string, error) {
-	tokens := strings.Split(input, " ")
+	tokens := strings.Fields(input)
 	if len(tokens) == 0 {
 		return "", nil
 	}
@@ -44,21 +44,31 @@ func PostfixToInfix(input string) (string, error) {
 			}
 
 			if prevPrecedence > precedence {
-				// if operand1 is only a number, no need to wrap it in parentheses
-				if _, err := strconv.Atoi(operand1); err != nil {
+				if !isNumber(operand1) {
 					operand1 = fmt.Sprintf("(%s)", operand1)
 				}
-				if _, err := strconv.Atoi(operand2); err != nil {
+				if !isNumber(operand2) {
 					operand2 = fmt.Sprintf("(%s)", operand2)
 				}
 			}
 			prevPrecedence = precedence
 
 			stack = append(stack, fmt.Sprintf("%s %s %s", operand1, operator, operand2))
+		} else if !isNumber(token) {
+			return "", fmt.Errorf("invalid posfix symbol %s", token)
 		} else {
 			stack = append(stack, token)
 		}
 	}
 
+	if len(stack) != 1 {
+		return "", fmt.Errorf("invalid postfix expression")
+	}
+
 	return stack[0], nil
+}
+
+func isNumber(s string) bool {
+	_, err := strconv.Atoi(s)
+	return err == nil
 }
