@@ -8,7 +8,7 @@ import (
 )
 
 func TestComputeHandler(t *testing.T) {
-	input := "+ 2 2"
+	input := "2 2 +"
 	computed, _ := PostfixToInfix(input)
 	buffWriter := bytes.NewBuffer([]byte{})
 
@@ -18,7 +18,7 @@ func TestComputeHandler(t *testing.T) {
 	assert.Equal(t, computed, buffWriter.String())
 }
 func TestComputeHandlerError(t *testing.T) {
-	input := "+ 2 + 2"
+	input := "2 + 2 +"
 	buffWriter := bytes.NewBuffer([]byte{})
 
 	handler := NewComputeHandler(strings.NewReader(input), buffWriter)
