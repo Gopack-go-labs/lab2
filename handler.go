@@ -1,6 +1,9 @@
 package lab2
 
-import "io"
+import (
+	"io"
+	"strings"
+)
 
 type ComputeHandler struct {
 	reader io.Reader
@@ -20,7 +23,8 @@ func (ch *ComputeHandler) Compute() error {
 		return err
 	}
 
-	res, err := PostfixToInfix(string(buf))
+	input := string(buf)
+	res, err := PostfixToInfix(sanitizeInput(input))
 	if err != nil {
 		return err
 	}
@@ -28,4 +32,10 @@ func (ch *ComputeHandler) Compute() error {
 	_, err = ch.writer.Write([]byte(res))
 
 	return err
+}
+
+func sanitizeInput(input string) string {
+	input = strings.ReplaceAll(input, "\\n", " ")
+	input = strings.ReplaceAll(input, "\\t", " ")
+	return input
 }
