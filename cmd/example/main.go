@@ -18,25 +18,16 @@ var (
 func main() {
 	flag.Parse()
 
-	input := getInputReader()
-	output := getOutputWriter()
-
-	handler := lab2.NewComputeHandler(input, output)
-	err := handler.Compute()
-	if err != nil {
-		os.Stderr.WriteString(err.Error())
-		os.Exit(1)
-	}
-}
-
-func getInputReader() io.Reader {
 	var input io.Reader
+	var output io.Writer
+
 	if *fileFlag != "" {
 		file, err := os.Open(*fileFlag)
 		if err != nil {
 			os.Stderr.WriteString("Error opening file\n")
 			os.Exit(1)
 		}
+		defer file.Close()
 		input = file
 	} else if *expressionFlag != "" {
 		input = strings.NewReader(*expressionFlag)
@@ -44,20 +35,23 @@ func getInputReader() io.Reader {
 		os.Stderr.WriteString("No expression or file provided\n")
 		os.Exit(1)
 	}
-	return input
-}
 
-func getOutputWriter() io.Writer {
-	var output io.Writer
 	if *outputFlag != "" {
 		file, err := os.Create(*outputFlag)
 		if err != nil {
 			os.Stderr.WriteString("Error creating output file\n")
 			os.Exit(1)
 		}
+		defer file.Close()
 		output = file
 	} else {
 		output = os.Stdout
 	}
-	return output
+
+	handler := lab2.NewComputeHandler(input, output)
+	err := handler.Compute()
+	if err != nil {
+		os.Stderr.WriteString(err.Error())
+		os.Exit(1)
+	}
 }
